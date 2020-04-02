@@ -1,9 +1,3 @@
-
-const galleryDiv = document.querySelector ('#gallery'); 
-const cardDiv = document.querySelectorAll ('.card'); 
-const documentBody = document.querySelector ('body');
-const script = document.querySelector ('script'); 
-
 /**
  * A function to create and append HTML elements 
  * @param {string} elementType 
@@ -17,10 +11,20 @@ function buildElement (elementType, elementClassName, elementParent) {
     return element; 
 } 
 
+const searchDiv = document.querySelector ('.search-container');
+const searchForm = document.createElement ('form'); 
+searchForm.setAttribute ('action', '#');
+searchForm.setAttribute ('method', 'get');
+searchDiv.appendChild (searchForm);
+searchForm.innerHTML = `
+    <input type="search" id="search-input" class="search-input" placeholder="Search...">
+    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">`
+
 /**
  * A function that creates and renders cards of employees on the page
  */
 function buildHTML (user) {
+    const galleryDiv = document.querySelector ('#gallery'); 
     const cardDiv = buildElement ('div', 'card', galleryDiv); // create a card div
     const cardImageContainer = buildElement ('div', 'card-img-container', cardDiv); // create image div  
     const cardInfoContainer = buildElement ('div', 'card-info-container', cardDiv); // create info div 
@@ -34,6 +38,8 @@ function buildHTML (user) {
     cardDiv.addEventListener ('click', () => { // show model container if card is clicked
         const modalContainer = document.createElement ('div'); // create modal container 
         modalContainer.className = 'modal-container';  
+        const documentBody = document.querySelector ('body');
+        const script = document.querySelector ('script'); 
         documentBody.insertBefore (modalContainer, script); // append modal container to body
         const modalDiv = buildElement ('div', 'modal', modalContainer); // create modal div
         const modalButton = buildElement ('button', 'modal-close-btn', modalDiv); // create modal button 
