@@ -28,31 +28,24 @@ searchForm.innerHTML = `
  */
 function buildHTML (user) {
     const cardDiv = buildElement ('div', 'card', galleryDiv); // create a card div
-    const cardImageContainer = buildElement ('div', 'card-img-container', cardDiv); // create image div  
-    const cardInfoContainer = buildElement ('div', 'card-info-container', cardDiv); // create info div 
-    const cardImage = buildElement ('img', 'card-img', cardImageContainer); // create image  
-    cardImage.setAttribute ('src', user.picture.large); 
-    cardImage.setAttribute ('alt', 'profile picture');
-    cardInfoContainer.innerHTML = `
+    cardDiv.innerHTML = `
+        <div class="card-img-container">
+        <img class="card-img" src=${user.picture.large} alt="profile picture">
+        </div>
+        <div class="card-info-container">
         <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
         <p class="card-text">${user.email}</p>
         <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`
-    cardDiv.addEventListener ('click', () => { // show model container if card is clicked
+    cardDiv.addEventListener ('click', () => {
         const modalContainer = document.createElement ('div'); // create modal container 
         modalContainer.className = 'modal-container';  
         const documentBody = document.querySelector ('body');
         const script = document.querySelector ('script'); 
         documentBody.insertBefore (modalContainer, script); // append modal container to body
-        const modalDiv = buildElement ('div', 'modal', modalContainer); // create modal div
-        const modalButton = buildElement ('button', 'modal-close-btn', modalDiv); // create modal button 
-        modalButton.setAttribute ('type', 'button'); 
-        modalButton.setAttribute ('id', 'modal-close-btn'); 
-        modalButton.innerHTML = '<strong>X</strong>'; 
-        modalButton.addEventListener ('click', () => { // hide modal container if close button is clicked
-            modalContainer.style.display = 'none'; 
-        });
-        const modalInfoContainer = buildElement ('div', 'modal-info-container', modalDiv); 
-        modalInfoContainer.innerHTML = `
+        modalContainer.innerHTML = `
+            <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
             <img class="modal-img" src=${user.picture.large} alt="profile picture">
             <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last}</h3>
             <p class="modal-text">${user.email}</p>
@@ -64,7 +57,7 @@ function buildHTML (user) {
         modalButtonContainer.innerHTML = `
             <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
             <button type="button" id="modal-next" class="modal-next btn">Next</button>`
-    });
+    })
 }
 
 /**
@@ -97,7 +90,7 @@ fetchData ('https://randomuser.me/api/?results=12')
         for (let i = 0; i < profiles.length; i ++) {
             const employee = profiles[i]; 
             buildHTML (employee);
-        }      
+        }
     })
 
 // Create message that is displayed if search has no results
