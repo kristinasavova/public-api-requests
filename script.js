@@ -1,4 +1,5 @@
 const galleryDiv = document.querySelector ('#gallery');
+const cardDiv = document.querySelectorAll ('.card');
 
 /**
  * A function to create and append HTML elements 
@@ -58,8 +59,12 @@ function buildHTML (user) {
             <p class="modal-text cap">${user.location.city}</p><hr>
             <p class="modal-text">${user.cell}</p>
             <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.state}, ${user.location.country} ${user.location.postcode}</p>
-            <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>
-    `});
+            <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>`
+        const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
+        modalButtonContainer.innerHTML = `
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>`
+    });
 }
 
 /**
@@ -95,6 +100,7 @@ fetchData ('https://randomuser.me/api/?results=12')
         }      
     })
 
+// Create message that is displayed if search has no results
 const notFoundMessage = buildElement ('h1', 'not-found-message', galleryDiv);
 notFoundMessage.innerHTML = 'Sorry, the employee is not found.'; 
 notFoundMessage.style.display = 'none'; 
