@@ -1,3 +1,5 @@
+const galleryDiv = document.querySelector ('#gallery');
+
 /**
  * A function to create and append HTML elements 
  * @param {string} elementType 
@@ -11,12 +13,12 @@ function buildElement (elementType, elementClassName, elementParent) {
     return element; 
 } 
 
-const searchDiv = document.querySelector ('.search-container');
-const searchForm = document.createElement ('form'); 
+const searchDiv = document.querySelector ('.search-container'); // create div for the search bar
+const searchForm = document.createElement ('form'); // create search form 
 searchForm.setAttribute ('action', '#');
 searchForm.setAttribute ('method', 'get');
 searchDiv.appendChild (searchForm);
-searchForm.innerHTML = `
+searchForm.innerHTML = ` 
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">`
 
@@ -24,7 +26,6 @@ searchForm.innerHTML = `
  * A function that creates and renders cards of employees on the page
  */
 function buildHTML (user) {
-    const galleryDiv = document.querySelector ('#gallery'); 
     const cardDiv = buildElement ('div', 'card', galleryDiv); // create a card div
     const cardImageContainer = buildElement ('div', 'card-img-container', cardDiv); // create image div  
     const cardInfoContainer = buildElement ('div', 'card-info-container', cardDiv); // create info div 
@@ -93,6 +94,39 @@ fetchData ('https://randomuser.me/api/?results=12')
             buildHTML (employee);
         }      
     })
+
+const notFoundMessage = buildElement ('h1', 'not-found-message', galleryDiv);
+notFoundMessage.innerHTML = 'Sorry, the employee is not found.'; 
+notFoundMessage.style.display = 'none'; 
+ 
+/**
+ * A function to search for employess 
+ */
+function searchBar () {
+    const searchInput = document.querySelector ('#search-input'); // select input element   
+    const cardDiv = document.querySelectorAll ('.card'); // select all cards
+    for (let i = 0; i < cardDiv.length; i ++) { // compare the searched value with the name of each employee  
+        const employeesNames = cardDiv[i].lastElementChild.firstElementChild; 
+        if (employeesNames.textContent.toLowerCase ().indexOf (searchInput.value.toLowerCase ()) > -1) {
+            notFoundMessage.style.display = 'none';
+            cardDiv[i].style.display = ''; 
+        } else {
+            cardDiv[i].style.display = 'none'; 
+            notFoundMessage.style.display = '';  
+        }
+    }
+}
+
+// A handler for the search button
+document.querySelector ('#search-submit').addEventListener ('click', (event) => {
+    event.preventDefault ();
+    searchBar ();
+});
+
+// A handler for the search input
+document.querySelector ('#search-input').addEventListener ('input', () => {
+    searchBar ();
+});
 
 
 
