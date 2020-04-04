@@ -35,7 +35,8 @@ function buildHTML (user) {
         <div class="card-info-container">
         <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
         <p class="card-text">${user.email}</p>
-        <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`
+        <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`;
+    
     cardDiv.addEventListener ('click', () => {
         const modalContainer = document.createElement ('div'); // create modal container 
         modalContainer.className = 'modal-container';  
@@ -52,15 +53,16 @@ function buildHTML (user) {
             <p class="modal-text cap">${user.location.city}</p><hr>
             <p class="modal-text">${user.cell}</p>
             <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.state}, ${user.location.country} ${user.location.postcode}</p>
-            <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>`
+            <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>`;
         const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
         modalButtonContainer.innerHTML = `
             <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
             <button type="button" id="modal-next" class="modal-next btn">Next</button>`
+        
         document.querySelector ('#modal-close-btn').addEventListener ('click', () => { // close the modal container 
-            modalContainer.style.display = 'none'; 
-        })
-    })
+            documentBody.removeChild (modalContainer);
+        });
+    });
 }
 
 /**
@@ -105,18 +107,24 @@ notFoundMessage.style.display = 'none';
  * A function to search for employess 
  */
 function searchBar () {
+    let notMatched = []; 
     const searchInput = document.querySelector ('#search-input'); // select input element   
     const cardDiv = document.querySelectorAll ('.card'); // select all cards
     for (let i = 0; i < cardDiv.length; i ++) { // compare the searched value with the name of each employee  
         const employeesNames = cardDiv[i].lastElementChild.firstElementChild; 
         if (employeesNames.textContent.toLowerCase ().indexOf (searchInput.value.toLowerCase ()) > -1) {
-            notFoundMessage.style.display = 'none';
             cardDiv[i].style.display = ''; 
         } else {
             cardDiv[i].style.display = 'none'; 
-            notFoundMessage.style.display = '';  
+            notMatched.push (cardDiv[i]); 
         }
     }
+    // Show the error message only if all the employees don't match 
+    if (notMatched.length < 12) { 
+        notFoundMessage.style.display = 'none';
+    } else {
+        notFoundMessage.style.display = ''; 
+    } 
 }
 
 // A handler for the search button
