@@ -57,6 +57,9 @@ function buildHTML (user) {
         modalButtonContainer.innerHTML = `
             <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
             <button type="button" id="modal-next" class="modal-next btn">Next</button>`
+        document.querySelector ('#modal-close-btn').addEventListener ('click', () => { // close the modal container 
+            modalContainer.style.display = 'none'; 
+        })
     })
 }
 
@@ -126,7 +129,3 @@ document.querySelector ('#search-submit').addEventListener ('click', (event) => 
 document.querySelector ('#search-input').addEventListener ('input', () => {
     searchBar ();
 });
-
-
-
-
