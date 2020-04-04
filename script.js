@@ -1,5 +1,8 @@
+
 const galleryDiv = document.querySelector ('#gallery');
-const cardDiv = document.querySelectorAll ('.card');
+const documentBody = document.querySelector ('body');
+const script = document.querySelector ('script'); 
+/* let cardDivs = []; */ 
 
 /**
  * A function to create and append HTML elements 
@@ -36,12 +39,11 @@ function buildHTML (user) {
         <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
         <p class="card-text">${user.email}</p>
         <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`;
+        /* cardDivs.push (cardDiv); */
     
-    cardDiv.addEventListener ('click', () => {
+    cardDiv.addEventListener ('click', (event) => {
         const modalContainer = document.createElement ('div'); // create modal container 
         modalContainer.className = 'modal-container';  
-        const documentBody = document.querySelector ('body');
-        const script = document.querySelector ('script'); 
         documentBody.insertBefore (modalContainer, script); // append modal container to body
         modalContainer.innerHTML = `
             <div class="modal">
@@ -61,6 +63,14 @@ function buildHTML (user) {
         
         document.querySelector ('#modal-close-btn').addEventListener ('click', () => { // close the modal container 
             documentBody.removeChild (modalContainer);
+        });
+
+        document.querySelector ('#modal-prev').addEventListener ('click', () => {
+            
+        });
+
+        document.querySelector ('#modal-next').addEventListener ('click', () => {
+            
         });
     });
 }
