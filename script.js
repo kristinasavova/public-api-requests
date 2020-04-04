@@ -3,7 +3,7 @@ const galleryDiv = document.querySelector ('#gallery');
 const documentBody = document.querySelector ('body');
 const script = document.querySelector ('script'); 
 
-let cardDivs = []; 
+let cardDivs = []; // the array of cards
 
 /**
  * A function to create and append HTML elements 
@@ -28,7 +28,34 @@ searchForm.innerHTML = `
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">`
 
 /**
+ * A function to create and append a modal container 
+ * @param {object} user - the employee whose profile is displayed  
+ */
+function buildModalHTML (user, index) {
+    const modalContainer = document.createElement ('div'); // create modal container 
+    modalContainer.setAttribute ('index', index);
+    modalContainer.className = 'modal-container';  
+    documentBody.insertBefore (modalContainer, script); // append modal container to body
+    modalContainer.innerHTML = `
+        <div class="modal">
+        <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+        <div class="modal-info-container">
+        <img class="modal-img" src=${user.picture.large} alt="profile picture">            
+        <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last}</h3>
+        <p class="modal-text">${user.email}</p>
+        <p class="modal-text cap">${user.location.city}</p><hr>
+        <p class="modal-text">${user.cell}</p>            
+        <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.state}, ${user.location.country} ${user.location.postcode}</p>
+        <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>`;
+    const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
+    modalButtonContainer.innerHTML = `
+        <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+        <button type="button" id="modal-next" class="modal-next btn">Next</button>`;
+}
+
+/**
  * A function that creates and renders cards of employees on the page
+ * @param {object} user - the employee whose profile is displayed
  */
 function buildHTML (user) {
     const cardDiv = buildElement ('div', 'card', galleryDiv); // create a card div
@@ -42,43 +69,28 @@ function buildHTML (user) {
         <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`;
         
         cardDivs.push (cardDiv); 
-        for (let i = 0; i < cardDivs.length; i ++) { // add unique index attribute to each card
+        // add unique index attribute to each card
+        for (let i = 0; i < cardDivs.length; i ++) { 
             cardDivs[i].setAttribute ('index', i);
         }
-    
+
     cardDiv.addEventListener ('click', (event) => {
-        
-        console.log (event.currentTarget.getAttribute ('index')); 
-        
-        const modalContainer = document.createElement ('div'); // create modal container 
-        modalContainer.className = 'modal-container';  
-        documentBody.insertBefore (modalContainer, script); // append modal container to body
-        modalContainer.innerHTML = `
-            <div class="modal">
-            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-            <div class="modal-info-container">
-            <img class="modal-img" src=${user.picture.large} alt="profile picture">
-            <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last}</h3>
-            <p class="modal-text">${user.email}</p>
-            <p class="modal-text cap">${user.location.city}</p><hr>
-            <p class="modal-text">${user.cell}</p>
-            <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.state}, ${user.location.country} ${user.location.postcode}</p>
-            <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>`;
-        const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
-        modalButtonContainer.innerHTML = `
-            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-            <button type="button" id="modal-next" class="modal-next btn">Next</button>`
-        
-        document.querySelector ('#modal-close-btn').addEventListener ('click', () => { // close the modal container 
+        let currentIndex = event.currentTarget.getAttribute ('index'); 
+        buildModalHTML (user, currentIndex); 
+        const modalContainer = document.querySelector ('.modal-container');
+        // close button handler 
+        document.querySelector ('#modal-close-btn').addEventListener ('click', () => { 
             documentBody.removeChild (modalContainer);
         });
-
+        // toggle left button handler
         document.querySelector ('#modal-prev').addEventListener ('click', () => {
-            
+            documentBody.removeChild (modalContainer);
+            buildModalHTML (user, currentIndex - 1);
         });
-
+        // toggle right button handler
         document.querySelector ('#modal-next').addEventListener ('click', () => {
-            
+            documentBody.removeChild (modalContainer);
+            buildElement (user, currentIndex + 1); 
         });
     });
 }
