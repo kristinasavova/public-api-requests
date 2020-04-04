@@ -2,7 +2,8 @@
 const galleryDiv = document.querySelector ('#gallery');
 const documentBody = document.querySelector ('body');
 const script = document.querySelector ('script'); 
-/* let cardDivs = []; */ 
+
+let cardDivs = []; 
 
 /**
  * A function to create and append HTML elements 
@@ -39,9 +40,16 @@ function buildHTML (user) {
         <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
         <p class="card-text">${user.email}</p>
         <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`;
-        /* cardDivs.push (cardDiv); */
+        
+        cardDivs.push (cardDiv); 
+        for (let i = 0; i < cardDivs.length; i ++) { // add unique index attribute to each card
+            cardDivs[i].setAttribute ('index', i);
+        }
     
     cardDiv.addEventListener ('click', (event) => {
+        
+        console.log (event.currentTarget.getAttribute ('index')); 
+        
         const modalContainer = document.createElement ('div'); // create modal container 
         modalContainer.className = 'modal-container';  
         documentBody.insertBefore (modalContainer, script); // append modal container to body
