@@ -33,6 +33,11 @@ searchForm.innerHTML = `
  */
 function buildModalHTML (user, index) {
     const modalContainer = document.createElement ('div'); // create modal container 
+    const date = new Date (user.dob.date); // create and formate the birthday date 
+    const day = date.getDate ();
+    const month = date.getMonth () + 1; 
+    const year = date.getFullYear ();
+    const birthday = `${day}/${month}/${year}`;  
     modalContainer.setAttribute ('index', index);
     modalContainer.className = 'modal-container';  
     documentBody.insertBefore (modalContainer, script); // append modal container to body
@@ -46,7 +51,7 @@ function buildModalHTML (user, index) {
         <p class="modal-text cap">${user.location.city}</p><hr>
         <p class="modal-text">${user.cell}</p>            
         <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.state}, ${user.location.country} ${user.location.postcode}</p>
-        <p class="modal-text">Birthday: ${user.dob.date.slice (0, 10)}</p>`;
+        <p class="modal-text">Birthday: ${birthday}</p>`;
     const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
     modalButtonContainer.innerHTML = `
         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
@@ -90,7 +95,7 @@ function buildHTML (user) {
         // toggle right button handler
         document.querySelector ('#modal-next').addEventListener ('click', () => {
             documentBody.removeChild (modalContainer);
-            buildElement (user, currentIndex + 1); 
+            buildModalHTML (user, currentIndex + 1); 
         });
     });
 }
