@@ -47,7 +47,8 @@ function buildModalHTML (user, i) {
         <p class="modal-text">${user[i].email}</p>
         <p class="modal-text cap">${user[i].location.city}</p><hr>
         <p class="modal-text">${user[i].cell}</p>            
-        <p class="modal-text">${user[i].location.street.number} ${user[i].location.street.name}, ${user[i].location.state}, ${user[i].location.country} ${user[i].location.postcode}</p>
+        <p class="modal-text">${user[i].location.street.number} ${user[i].location.street.name}</p> 
+        <p class="modal-text">${user[i].location.state}, ${user[i].location.country} ${user[i].location.postcode}</p>
         <p class="modal-text">Birthday: ${birthday}</p>`;
     const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer); // create toggle buttons
     modalButtonContainer.innerHTML = `
@@ -158,7 +159,7 @@ function searchBar () {
     for (let i = 0; i < cardDiv.length; i ++) { // compare the searched value with the name of each employee  
         const employeesNames = cardDiv[i].lastElementChild.firstElementChild; 
         if (employeesNames.textContent.toLowerCase ().indexOf (searchInput.value.toLowerCase ()) > -1) {
-            cardDiv[i].style.display = ''; 
+            cardDiv[i].style.display = '';  
         } else {
             cardDiv[i].style.display = 'none'; 
             notMatched.push (cardDiv[i]); 
