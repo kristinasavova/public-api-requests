@@ -27,13 +27,14 @@ searchDiv.innerHTML = `
 
 /**
  * A function to create and append a modal container 
- * @param {object} user - the employee whose profile is displayed  
+ * @param {object} user - the employee whose profile is displayed
+ * @param {integer} i - the index of an object in the array of users  
  */
 function buildModalHTML (user, i) { 
     const date = new Date (user[i].dob.date); // create and formate the birthday date 
-    const day = date.getDate ();
-    const month = date.getMonth () + 1; 
-    const year = date.getFullYear ();
+    const day = date.getDate (); // get the day
+    const month = date.getMonth () + 1; // get the month
+    const year = date.getFullYear (); // get the year
     const birthday = `${day}/${month}/${year}`; 
     modalContainer.className = 'modal-container';  
     documentBody.insertBefore (modalContainer, script); // append modal container to body
@@ -48,22 +49,41 @@ function buildModalHTML (user, i) {
         <p class="modal-text">${user[i].cell}</p>            
         <p class="modal-text">${user[i].location.street.number} ${user[i].location.street.name}, ${user[i].location.state}, ${user[i].location.country} ${user[i].location.postcode}</p>
         <p class="modal-text">Birthday: ${birthday}</p>`;
-    const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
+    const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer); // create toggle buttons
     modalButtonContainer.innerHTML = `
         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
         <button type="button" id="modal-next" class="modal-next btn">Next</button>`; 
-    const modalButtons = Array.from (modalButtonContainer.children); 
+    const modalButtons = Array.from (modalButtonContainer.children); // turn the list of toggle buttons into array 
     modalButtons.forEach (modalButton => {
-        modalButton.addEventListener ('click', (event) => {
+        modalButton.addEventListener ('click', (event) => { // add event listener to each toggle button
             if (event.target && modalButton.textContent === 'Prev') {
-                documentBody.removeChild (modalContainer);
-                buildModalHTML (user, i - 1); 
+                documentBody.removeChild (modalContainer); // remove the current card
+                if (i === 0) {
+                    buildModalHTML (user, i + 11); // if the current card is the first one, show the last one
+                } else {
+                    buildModalHTML (user, i - 1); // show previous card 
+                }
+                closeModalContainer (); // remove modal container if close button is clicked
             } else if (event.target && modalButton.textContent === 'Next') {
-                documentBody.removeChild (modalContainer);
-                buildModalHTML (user, i + 1); 
+                documentBody.removeChild (modalContainer); // remove the current card
+                if (i === 11) {
+                    buildModalHTML (user, i - 11); // if the current card is the last one, show the first one 
+                } else {
+                    buildModalHTML (user, i + 1); // show next card
+                } 
+                closeModalContainer (); // remove modal container if close button is clicked
             }
         });
     });     
+}
+
+/**
+ * A function to close modal container if close button is clicked
+ */
+function closeModalContainer () {
+    document.querySelector ('#modal-close-btn').addEventListener ('click', () => { 
+        documentBody.removeChild (modalContainer);
+    });
 }
 
 /**
@@ -83,14 +103,19 @@ function buildHTML (user) {
 }
 
 /**
- * A function to fetch data 
- * @param {string} url - URL-address to fetch the data  
+ * A function to show a modal container dynamically 
+ * @param {object} user - the employee whose profile is displayed  
  */
-function fetchData (url) {
-    return fetch (url)
-        .then (checkStatus)
-        .then (resp => resp.json ())
-        .catch (error => console.error ('Oh no! Something is wrong!', error)); 
+function showModalHTML (user) {
+    const cardDivs = document.querySelectorAll ('.card'); 
+    const cardDivsArray = Array.from (cardDivs); 
+    for (let i = 0; i < cardDivsArray.length; i ++) {
+        const cardDiv = cardDivsArray[i];
+        cardDiv.addEventListener ('click', () => {
+            buildModalHTML (user, i); 
+            closeModalContainer ();
+        });
+    } 
 }
 
 /**
@@ -105,15 +130,18 @@ function checkStatus (response) {
     }
 }
 
-fetchData ('https://randomuser.me/api/?results=12')
+// Fetch data from Random User Generator  
+fetch ('https://randomuser.me/api/?nat=dk,fr,gb,ch,de,no,ca,us&results=12')
+    .then (checkStatus)
+    .then (response => response.json ())
     .then (object => {
         const profiles = object.results; // access the array of profiles 
-        console.log (profiles);
         profiles.forEach (profile => {
-            buildHTML (profile); 
+            buildHTML (profile); // biuld a card for each profile
         });
-        showModalHTML (profiles); 
+        showModalHTML (profiles); // show a modal container for the clicked card 
     })
+    .catch (error => console.error ('Oh no! Something went wrong!', error));
 
 // Create message that is displayed if search has no results
 const notFoundMessage = buildElement ('h1', 'not-found-message', galleryDiv);
@@ -142,24 +170,6 @@ function searchBar () {
     } else {
         notFoundMessage.style.display = ''; 
     } 
-}
-
-function showModalHTML (user) {
-    const cardDivs = document.querySelectorAll ('.card'); 
-    const cardDivsArray = Array.from (cardDivs); 
-    for (let i = 0; i < cardDivsArray.length; i ++) {
-        const cardDiv = cardDivsArray[i];
-        cardDiv.addEventListener ('click', () => {
-            buildModalHTML (user, i); 
-            closeModalContainer ();
-        });
-    } 
-}
-
-function closeModalContainer () {
-    document.querySelector ('#modal-close-btn').addEventListener ('click', () => { 
-        documentBody.removeChild (modalContainer);
-    });
 }
 
 // A handler for the search button
