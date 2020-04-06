@@ -2,8 +2,7 @@
 const galleryDiv = document.querySelector ('#gallery');
 const documentBody = document.querySelector ('body');
 const script = document.querySelector ('script'); 
-
-let cardDivs = []; // the array of cards
+const modalContainer = document.createElement ('div'); // create modal container
 
 /**
  * A function to create and append HTML elements 
@@ -18,44 +17,53 @@ function buildElement (elementType, elementClassName, elementParent) {
     return element; 
 } 
 
-const searchDiv = document.querySelector ('.search-container'); // create div for the search bar
-const searchForm = document.createElement ('form'); // create search form 
-searchForm.setAttribute ('action', '#');
-searchForm.setAttribute ('method', 'get');
-searchDiv.appendChild (searchForm);
-searchForm.innerHTML = ` 
+// Create HTML for the search form and search inputs
+const searchDiv = document.querySelector ('.search-container'); 
+searchDiv.innerHTML = `
+    <form action="#" method="get"> 
     <input type="search" id="search-input" class="search-input" placeholder="Search...">
-    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">`
+    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>`;
 
 /**
  * A function to create and append a modal container 
  * @param {object} user - the employee whose profile is displayed  
  */
-function buildModalHTML (user, index) {
-    const modalContainer = document.createElement ('div'); // create modal container 
-    const date = new Date (user.dob.date); // create and formate the birthday date 
+function buildModalHTML (user, i) { 
+    const date = new Date (user[i].dob.date); // create and formate the birthday date 
     const day = date.getDate ();
     const month = date.getMonth () + 1; 
     const year = date.getFullYear ();
-    const birthday = `${day}/${month}/${year}`;  
-    modalContainer.setAttribute ('index', index);
+    const birthday = `${day}/${month}/${year}`; 
     modalContainer.className = 'modal-container';  
     documentBody.insertBefore (modalContainer, script); // append modal container to body
     modalContainer.innerHTML = `
         <div class="modal">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
         <div class="modal-info-container">
-        <img class="modal-img" src=${user.picture.large} alt="profile picture">            
-        <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last}</h3>
-        <p class="modal-text">${user.email}</p>
-        <p class="modal-text cap">${user.location.city}</p><hr>
-        <p class="modal-text">${user.cell}</p>            
-        <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.state}, ${user.location.country} ${user.location.postcode}</p>
+        <img class="modal-img" src=${user[i].picture.large} alt="profile picture">            
+        <h3 id="name" class="modal-name cap">${user[i].name.first} ${user[i].name.last}</h3>
+        <p class="modal-text">${user[i].email}</p>
+        <p class="modal-text cap">${user[i].location.city}</p><hr>
+        <p class="modal-text">${user[i].cell}</p>            
+        <p class="modal-text">${user[i].location.street.number} ${user[i].location.street.name}, ${user[i].location.state}, ${user[i].location.country} ${user[i].location.postcode}</p>
         <p class="modal-text">Birthday: ${birthday}</p>`;
     const modalButtonContainer = buildElement ('div', 'modal-btn-container', modalContainer);
     modalButtonContainer.innerHTML = `
         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-        <button type="button" id="modal-next" class="modal-next btn">Next</button>`;
+        <button type="button" id="modal-next" class="modal-next btn">Next</button>`; 
+    const modalButtons = Array.from (modalButtonContainer.children); 
+    modalButtons.forEach (modalButton => {
+        modalButton.addEventListener ('click', (event) => {
+            if (event.target && modalButton.textContent === 'Prev') {
+                documentBody.removeChild (modalContainer);
+                buildModalHTML (user, i - 1); 
+            } else if (event.target && modalButton.textContent === 'Next') {
+                documentBody.removeChild (modalContainer);
+                buildModalHTML (user, i + 1); 
+            }
+        });
+    });     
 }
 
 /**
@@ -72,32 +80,6 @@ function buildHTML (user) {
         <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
         <p class="card-text">${user.email}</p>
         <p class="card-text cap">${user.location.city}, ${user.location.country}</p>`;
-        
-        cardDivs.push (cardDiv); 
-        // add unique index attribute to each card
-        for (let i = 0; i < cardDivs.length; i ++) { 
-            cardDivs[i].setAttribute ('index', i);
-        }
-
-    cardDiv.addEventListener ('click', (event) => {
-        let currentIndex = event.currentTarget.getAttribute ('index'); 
-        buildModalHTML (user, currentIndex); 
-        const modalContainer = document.querySelector ('.modal-container');
-        // close button handler 
-        document.querySelector ('#modal-close-btn').addEventListener ('click', () => { 
-            documentBody.removeChild (modalContainer);
-        });
-        // toggle left button handler
-        document.querySelector ('#modal-prev').addEventListener ('click', () => {
-            documentBody.removeChild (modalContainer);
-            buildModalHTML (user, currentIndex - 1);
-        });
-        // toggle right button handler
-        document.querySelector ('#modal-next').addEventListener ('click', () => {
-            documentBody.removeChild (modalContainer);
-            buildModalHTML (user, currentIndex + 1); 
-        });
-    });
 }
 
 /**
@@ -127,10 +109,10 @@ fetchData ('https://randomuser.me/api/?results=12')
     .then (object => {
         const profiles = object.results; // access the array of profiles 
         console.log (profiles);
-        for (let i = 0; i < profiles.length; i ++) {
-            const employee = profiles[i]; 
-            buildHTML (employee);
-        }
+        profiles.forEach (profile => {
+            buildHTML (profile); 
+        });
+        showModalHTML (profiles); 
     })
 
 // Create message that is displayed if search has no results
@@ -160,6 +142,24 @@ function searchBar () {
     } else {
         notFoundMessage.style.display = ''; 
     } 
+}
+
+function showModalHTML (user) {
+    const cardDivs = document.querySelectorAll ('.card'); 
+    const cardDivsArray = Array.from (cardDivs); 
+    for (let i = 0; i < cardDivsArray.length; i ++) {
+        const cardDiv = cardDivsArray[i];
+        cardDiv.addEventListener ('click', () => {
+            buildModalHTML (user, i); 
+            closeModalContainer ();
+        });
+    } 
+}
+
+function closeModalContainer () {
+    document.querySelector ('#modal-close-btn').addEventListener ('click', () => { 
+        documentBody.removeChild (modalContainer);
+    });
 }
 
 // A handler for the search button
