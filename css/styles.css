@@ -59,8 +59,7 @@ header h1 {
 }
 
 .search-submit:active, .search-submit:hover, .search-submit:focus {
-    background: #FF3B3F;
-    border-style: none;
+    background: #DCDCDC;
 }
 
 
@@ -88,7 +87,7 @@ header h1 {
     max-width: 360px;
     margin: 10px 10px 20px;
     padding: 10px;
-    background: #A9A9A9;
+    background: #C0C0C0;
     border: 1px solid #000000;
     border-radius: 0.3em;
     transition: .4s ease-out;
@@ -114,7 +113,6 @@ header h1 {
 .card-text {
     font-size: 0.9em;
     color: #000000;
-    text-shadow: .5px .5px 1px #000000;
     margin: 7px auto;
     transition: .4s ease-out;
 }
@@ -250,12 +248,11 @@ header h1 {
 @media (min-width: 1024px) {
 
     .card:hover {
-        background: #FF3B3F;
-        border-style: none;
+        background: #DCDCDC;
+        border: 1px solid #000000;
     }
 
     .btn:hover {
-        background: #FF3B3F;
-        color: #EFEFEF; 
+        background: #DCDCDC;
     }
 }
