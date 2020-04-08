@@ -16,7 +16,7 @@ html, body {
 body {
     font-family: "Nunito", sans-serif;
     text-align: center;
-    background: #EFEFEF;
+    background: #FFFFFF;
 }
 
 header {
@@ -45,21 +45,22 @@ header h1 {
 }
 
 .search-input:active, .search-input:hover, .search-input:focus {
-    border: 1px solid #111111;
+    border: 1px solid #838383;
 }
 
 .search-submit {
     cursor: pointer;
     height: 33px;
-    background: #A9A9A9;
+    background: #CDCDCD;
     border-radius: 0 0.25rem 0.25rem 0;
-    border: 1px solid #000000;
+    border: 1px solid #838383;
     transition: .4s ease-out;
     outline: none;
 }
 
 .search-submit:active, .search-submit:hover, .search-submit:focus {
-    background: #DCDCDC;
+    background: #FFD700;
+    border-style: none; 
 }
 
 
@@ -87,8 +88,8 @@ header h1 {
     max-width: 360px;
     margin: 10px 10px 20px;
     padding: 10px;
-    background: #C0C0C0;
-    border: 1px solid #000000;
+    background: #CDCDCD;
+    border: 1px solid #838383;
     border-radius: 0.3em;
     transition: .4s ease-out;
     overflow: hidden;
@@ -132,7 +133,7 @@ header h1 {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(1, 1, 1, 0.6);
+    background: rgba(1, 1, 1, 0.8);
 }
 
 .modal {
@@ -142,7 +143,8 @@ header h1 {
     min-height: 415px;
     margin: 10px auto auto;
     padding-bottom: 15px;
-    background: #EFEFEF;
+    background: #FFFFFF;
+    border: 1px solid #CDCDCD;
     border-radius: 0.3em;
     transition: .4s ease-out;
 }
@@ -152,8 +154,9 @@ header h1 {
     top: 15px;
     right: 15px;
     cursor: pointer;
-    color: #EFEFEF;
-    background: #A9A9A9;
+    color: #FFFFFF;
+    background: #CDCDCD;
+    border: 1px solid #838383;
     outline: none;
     border-radius: 0.3em;
 }
@@ -189,7 +192,7 @@ header h1 {
     max-width: 420px;
     padding: 10px 15px 15px;;
     margin: 10px auto auto;
-    background: #EFEFEF;
+    background: #FFFFFF;
     border-radius: 0.3em;
 }
 
@@ -201,7 +204,8 @@ header h1 {
     text-transform: uppercase;
     color: #000000;
     padding: 0.75em 1.5em;
-    background: #A9A9A9;
+    background: #CDCDCD;
+    border: 1px solid #838383;
     border-radius: 0.35em;
     transition: .4s ease-out;
     outline: none;
@@ -248,11 +252,12 @@ header h1 {
 @media (min-width: 1024px) {
 
     .card:hover {
-        background: #DCDCDC;
-        border: 1px solid #000000;
+        background: #FFD700;
+        border-style: none; 
     }
 
     .btn:hover {
-        background: #DCDCDC;
+        background: #FFD700;
+        border-style: none; 
     }
 }
